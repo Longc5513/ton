@@ -1,0 +1,74 @@
+const ethers = require('ethers');
+
+// ==== ĐIỀN THÔNG TIN ====
+const RPC         = "https://https://game.somnia.exchange/swap";
+const PRIVATE_KEY = "0x6c4642e96af4a3b5dff4c4a92986d537c7333ae343ca476957e0d06b1e384a5e";
+const ROUTER      = "0xea5b1f14e523eadbcf943f35b343302c2b6b2f31"; // router từ popup
+const TOKEN_STT   = "0x7f89af8b3c0A68F536Ff20433927F4573CF001A3";
+const TOKEN_NIA   = "0xf2f773753cebefaf9b68b841d80c083b18c69311";
+const AMOUNT_EACH = 5;       // mỗi lần swap
+const DELAY_MS    = 15000;   // delay giữa 2 lệnh
+// ========================
+
+const provider = new ethers.JsonRpcProvider(RPC);
+const wallet   = new ethers.Wallet(PRIVATE_KEY, provider);
+
+const routerAbi = [
+  "function swapExactTokensForTokens(uint amountIn,uint amountOutMin,address[] path,address to,uint deadline)"
+];
+const erc20Abi = [
+  "function approve(address spender,uint256 value) external returns (bool)",
+  "function allowance(address owner,address spender) view returns (uint256)",
+  "function decimals() view returns (uint8)",
+  "function balanceOf(address) view returns (uint256)"
+];
+
+const router = new ethers.Contract(ROUTER, routerAbi, wallet);
+const stt = new ethers.Contract(TOKEN_STT, erc20Abi, wallet);
+const nia = new ethers.Contract(TOKEN_NIA, erc20Abi, wallet);
+
+const MAX = 2n**256n - 1n;
+const sleep = (ms)=>new Promise(r=>setTimeout(r,ms));
+
+async function ensureAllowance(tokenAddr, symbol, amountHuman) {
+  const token = tokenAddr === TOKEN_STT ? stt : nia;
+  const dec   = await token.decimals().catch(()=>18);
+  const need  = ethers.parseUnits(String(amountHuman), dec);
+  const cur   = await token.allowance(wallet.address, ROUTER);
+  if (cur >= need) { console.log(`✔ Allowance ${symbol} OK`); return dec; }
+  console.log(`⏳ Approve ${symbol}...`);
+  const tx = await token.approve(ROUTER, MAX);
+  console.log(`   tx: ${tx.hash}`); await tx.wait();
+  console.log(`✔ Approved ${symbol}`);
+  return dec;
+}
+
+async function swap(amountHuman, fromAddr, toAddr, label) {
+  const dec = await ensureAllowance(fromAddr, label.split("→")[0].trim(), amountHuman);
+  const amt = ethers.parseUnits(String(amountHuman), dec);
+  const tx = await router.swapExactTokensForTokens(
+    amt,
+    0n, // đặt minOut/slippage nếu cần
+    [fromAddr, toAddr],
+    wallet.address,
+    Math.floor(Date.now()/1000)+600
+  );
+  console.log(`🔁 ${label} tx: ${tx.hash}`);
+  await tx.wait();
+  console.log(`✅ ${label} done`);
+}
+
+(async () => {
+  console.log("Address:", wallet.address);
+  while (true) {
+    try {
+      await swap(AMOUNT_EACH, TOKEN_STT, TOKEN_NIA, "STT → NIA");
+      await sleep(DELAY_MS);
+      await swap(AMOUNT_EACH, TOKEN_NIA, TOKEN_STT, "NIA → STT");
+      await sleep(DELAY_MS);
+    } catch (e) {
+      console.error("❌", e.reason || e.message);
+      await sleep(30000);
+    }
+  }
+})();
