@@ -121,3 +121,17 @@ async function swapNIAtoSTT(amountNIA){
     }
   }
 })();
+(async () => {
+  console.log('address:', wallet.address);
+  while (true) {
+    try {
+      await swapSTTtoNIA(AMT_STT);
+      await sleep(DELAY);
+      await swapNIAtoSTT(AMT_NIA);
+      await sleep(DELAY);
+    } catch (e) {
+      console.error('ERR', e.reason || e.message);
+      await sleep(30000);
+    }
+  }
+})();
