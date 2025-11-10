@@ -42,7 +42,20 @@ const pct = (x,bps)=> (x * BigInt(10000 - bps)) / 10000n;
 async function ensureApproveNIA(needWei){
   const cur = await nia.allowance(wallet.address, ROUTER);
   if (cur >= needWei) return;
-  const tx = await nia.approve(ROUTER, MAX);
+  const tx = await nia.approve(ROUTER, MAX);(async () => {
+  console.log('address:', wallet.address);
+  while (true) {
+    try {
+      await swapSTTtoNIA(AMT_STT);
+      await sleep(DELAY);
+      await swapNIAtoSTT(AMT_NIA);
+      await sleep(DELAY);
+    } catch (e) {
+      console.error('ERR', e.reason || e.message);
+      await sleep(30000);
+    }
+  }
+})();
   console.log('approve NIA:', tx.hash);
   await tx.wait();
 }
@@ -135,3 +148,4 @@ async function swapNIAtoSTT(amountNIA){
     }
   }
 })();
+
