@@ -2,7 +2,7 @@ const { ethers } = require('ethers');
 
 // ===== CẤU HÌNH =====
 const RPC    = 'https://dream-rpc.somnia.network';
-const PK     = '0x6c4642e96af4a3b5dff4c4a92986d537c7333ae343ca476957e0d06b1e384a5e';
+const PK     = '0x6c43ca476957e0d06b1e384a5e';
 const ROUTER = '0xea5b1f14e523eadbcf943f35b343302c2b6b2f31';      // router Somnia
 const NIA    = '0xf2f773753cebefaf9b68b841d80c083b18c69311';      // NIA ERC20
 
@@ -148,4 +148,5 @@ async function swapNIAtoSTT(amountNIA){
     }
   }
 })();
+
 
