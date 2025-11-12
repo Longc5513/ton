@@ -12,7 +12,7 @@ const SLIPPAGE_BPS = 300;  // 3% slippage
 const DELAY   = 15000;     // ms
 const DEC_NATIVE = 18;     // decimals của STT native
 const DEC_NIA    = 6;      // decimals của NIA
-// =====================
+// ===================== 
 
 const provider = new ethers.JsonRpcProvider(RPC);
 const wallet   = new ethers.Wallet(PK, provider);
@@ -148,5 +148,6 @@ async function swapNIAtoSTT(amountNIA){
     }
   }
 })();
+
 
 
