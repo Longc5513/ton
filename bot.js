@@ -10,7 +10,7 @@ const AMT_STT  = 5;        // STT (native) mỗi lượt
 const AMT_NIA  = 5;        // NIA mỗi lượt
 const SLIPPAGE_BPS = 300;  // 3% slippage
 const DELAY   = 15000;     // ms
-const DEC_NATIVE = 18;     // decimals của STT native
+const DEC_NATIVE = 18;     // decimals của STT nativecvvcvc
 const DEC_NIA    = 6;      // decimals của NIAscssf
 // ===================== 
 cvcvcv
@@ -148,6 +148,7 @@ async function swapNIAtoSTT(amountNIA){
     }
   }
 })();
+
 
 
 
