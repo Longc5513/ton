@@ -16,7 +16,7 @@ const DEC_NIA    = 6;      // decimals của NIAscssf
 cvcvcv
 const provider = new ethers.JsonRpcProvider(RPC)ffgfgf;
 const wallet   = new ethers.Wallet(PK, provider);
-
+fgfgfgfg
 const routerAbi = [
   'function WETH() view returns (address)',
   'function factory() view returns (address)',
@@ -148,6 +148,7 @@ async function swapNIAtoSTT(amountNIA){
     }
   }
 })();
+
 
 
 
