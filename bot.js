@@ -18,7 +18,7 @@ const provider = new ethers.JsonRpcProvider(RPC)ffgfgf;
 const wallet   = new ethers.Wallet(PK, provider);fgfgfgfgf
 fgfgfgfg
 const routerAbi = [
-  'function WETH() view returns (address)',
+  'function WETH() view returns (address)',vvvdvdvd
   'function factory() view returns (address)',
   'function getAmountsOut(uint amountIn,address[] path) view returns (uint[] amounts)',
   'function swapExactETHForTokens(uint amountOutMin,address[] path,address to,uint deadline) payable returns (uint[])',
@@ -148,6 +148,7 @@ async function swapNIAtoSTT(amountNIA){
     }
   }
 })();
+
 
 
 
