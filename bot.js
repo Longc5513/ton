@@ -14,7 +14,7 @@ const DEC_NATIVE = 18;     // decimals của STT nativecvvcvc
 const DEC_NIA    = 6;      // decimals của NIAscssf
 // ===================== dgdgdg
 cvcvcv
-const provider = new ethers.JsonRpcProvider(RPC);
+const provider = new ethers.JsonRpcProvider(RPC)ffgfgf;
 const wallet   = new ethers.Wallet(PK, provider);
 
 const routerAbi = [
@@ -148,6 +148,7 @@ async function swapNIAtoSTT(amountNIA){
     }
   }
 })();
+
 
 
 
